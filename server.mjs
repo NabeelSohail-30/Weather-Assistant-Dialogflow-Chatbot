@@ -45,7 +45,7 @@ app.post("/webhook", async (req, res) => {
         break;
       }
 
-      case "Weather Inquiry Intent": {
+      case "cityWeather": {
         let city = params.city;
 
         const weatherData = queryWeather(city);
