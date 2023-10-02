@@ -54,7 +54,7 @@ app.post("/webhook", async (req, res) => {
             {
               text: {
                 text: [
-                  `The temperature in ${weatherData.city} is ${weatherData.temperature}°C, and it's ${weatherData.condition}.`,
+                  `The temperature in ${city} is ${weatherData.temperature}°C, and it's ${weatherData.condition}.`,
                 ],
               },
             },
@@ -111,7 +111,6 @@ const queryWeather = async (cityName) => {
   const jsonResponse = await response.json();
   console.log(jsonResponse);
   const weatherData = {
-    city: jsonResponse.name,
     condition: jsonResponse.weather[0].main,
     temperature: jsonResponse.main.temp,
   };
