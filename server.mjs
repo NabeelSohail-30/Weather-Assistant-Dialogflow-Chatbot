@@ -48,22 +48,26 @@ app.post("/webhook", async (req, res) => {
       case "cityWeather": {
         let city = params.city;
 
-        const weatherData = queryWeather(city);
-        console.log(weatherData);
-        console.log(city);
-        console.log(weatherData.condition);
-        console.log(weatherData.temperature);
-        res.send({
-          fulfillmentMessages: [
-            {
-              text: {
-                text: [
-                  `The temperature in ${city} is ${weatherData.temperature}°C, and it's ${weatherData.condition}.`,
-                ],
+        try {
+          const weatherData = await queryWeather(city);
+          console.log(weatherData);
+
+          res.send({
+            fulfillmentMessages: [
+              {
+                text: {
+                  text: [
+                    `The temperature in ${city} is ${weatherData.temperature}°C, and it's ${weatherData.condition}.`,
+                  ],
+                },
               },
-            },
-          ],
-        });
+            ],
+          });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send({ error: "Unable to fetch weather data" });
+        }
+
         break;
       }
 
