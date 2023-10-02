@@ -108,19 +108,15 @@ const queryWeather = async (cityName) => {
 
   const url = `${apiUrl}weather?q=${cityName}&appid=${apiKey}&units=metric`;
   const response = await fetch(url);
+  const jsonResponse = await response.json();
+  console.log(jsonResponse);
+  const weatherData = {
+    city: jsonResponse.name,
+    condition: jsonResponse.weather[0].main,
+    temperature: jsonResponse.main.temp,
+  };
 
-  if (response.ok) {
-    const jsonResponse = await response.json();
-    const weatherData = {
-      city: jsonResponse.name,
-      condition: jsonResponse.weather[0].main,
-      temperature: jsonResponse.main.temp,
-    };
-
-    return weatherData;
-  } else {
-    throw new Error("Request failed!");
-  }
+  return weatherData;
 };
 
 /*---------------------Static Files--------------------------*/
