@@ -37,7 +37,7 @@ app.post("/webhook", async (req, res) => {
             {
               text: {
                 text: [
-                  "Hello There, Welcome to SAF Collegiate. How can I help you?",
+                  "Hello! 👋 Welcome to Weather Assistant Chatbot, How can I assist you with the weather today?",
                 ],
               },
             },
