@@ -49,6 +49,10 @@ app.post("/webhook", async (req, res) => {
         let city = params.city;
 
         const weatherData = queryWeather(city);
+        console.log(weatherData);
+        console.log(city);
+        console.log(weatherData.condition);
+        console.log(weatherData.temperature);
         res.send({
           fulfillmentMessages: [
             {
@@ -109,7 +113,6 @@ const queryWeather = async (cityName) => {
   const url = `${apiUrl}weather?q=${cityName}&appid=${apiKey}&units=metric`;
   const response = await fetch(url);
   const jsonResponse = await response.json();
-  console.log(jsonResponse);
   const weatherData = {
     condition: jsonResponse.weather[0].main,
     temperature: jsonResponse.main.temp,
