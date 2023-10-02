@@ -26,7 +26,6 @@ const port = process.env.PORT || 5001;
 app.post("/webhook", async (req, res) => {
   try {
     const body = req.body;
-
     const intentName = body.queryResult.intent.displayName;
     const params = body.queryResult.parameters;
 
@@ -37,7 +36,25 @@ app.post("/webhook", async (req, res) => {
             {
               text: {
                 text: [
-                  "Hello! 👋 Welcome to Weather Assistant Chatbot, How can I assist you with the weather today?",
+                  "Hello! 👋 Welcome to Weather Assistant Chatbot. How can I assist you with the weather today?",
+                ],
+              },
+            },
+          ],
+        });
+        break;
+      }
+
+      case "Weather Inquiry Intent": {
+        let city = params.city;
+
+        const weatherData = queryWeather(city);
+        res.send({
+          fulfillmentMessages: [
+            {
+              text: {
+                text: [
+                  `The temperature in ${weatherData.city} is ${weatherData.temperature}°C, and it's ${weatherData.condition}.`,
                 ],
               },
             },
@@ -51,9 +68,7 @@ app.post("/webhook", async (req, res) => {
           fulfillmentMessages: [
             {
               text: {
-                text: [
-                  "Sorry, I didn't get that. Please try again or contact us at 0300-1234567",
-                ],
+                text: ["Sorry, I didn't get that. Please try again."],
               },
             },
           ],
@@ -66,9 +81,7 @@ app.post("/webhook", async (req, res) => {
           fulfillmentMessages: [
             {
               text: {
-                text: [
-                  "Sorry, I didn't get that. Please try again or contact us at 0300-1234567",
-                ],
+                text: ["Sorry, I didn't get that. Please try again."],
               },
             },
           ],
@@ -81,13 +94,34 @@ app.post("/webhook", async (req, res) => {
       fulfillmentMessages: [
         {
           text: {
-            text: ["something is wrong in server, please try again"],
+            text: ["Something is wrong with the server. Please try again."],
           },
         },
       ],
     });
   }
 });
+
+const queryWeather = async (cityName) => {
+  const apiKey = "6a6cb112b4746fd1d963422db62a0782";
+  const apiUrl = "https://api.openweathermap.org/data/2.5/";
+
+  const url = `${apiUrl}weather?q=${cityName}&appid=${apiKey}&units=metric`;
+  const response = await fetch(url);
+
+  if (response.ok) {
+    const jsonResponse = await response.json();
+    const weatherData = {
+      city: jsonResponse.name,
+      condition: jsonResponse.weather[0].main,
+      temperature: jsonResponse.main.temp,
+    };
+
+    return weatherData;
+  } else {
+    throw new Error("Request failed!");
+  }
+};
 
 /*---------------------Static Files--------------------------*/
 
